@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>С днём рождения, мамочка!</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#3aa0ea">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%F0%9F%8E%88%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+<script src="js/config.js"></script>
+<script src="vendor/aframe.min.js"></script>
+<script src="js/components.js"></script>
+</head>
+<body>
+
+<a-scene
+  id="scene"
+  stereo-view
+  vr-mode-ui="enabled: false"
+  device-orientation-permission-ui="enabled: false"
+  loading-screen="enabled: false"
+  renderer="antialias: true; colorManagement: true; alpha: false"
+  background="color: #0b1026">
+
+  <a-assets timeout="30000">
+    <img id="texDrawing" src="assets/images/drawing.jpg" crossorigin="anonymous">
+    <img id="texMagic" src="assets/images/magic.jpg" crossorigin="anonymous">
+  </a-assets>
+
+  <a-sky id="sky" backdrop radius="60" material="shader: flat; color: #26304f"></a-sky>
+
+  <a-circle id="ground" backdrop radius="40" rotation="-90 0 0" position="0 -0.02 0"
+            material="shader: flat; color: #223225"></a-circle>
+
+  <a-entity id="sun" sun-glow="size: 11" position="-9 9 -20"></a-entity>
+  <a-entity id="clouds" clouds></a-entity>
+
+  <!-- открытка: лист лежит внизу, как на столе. Чтобы оживить — надо на него посмотреть -->
+  <a-entity id="card" position="0 0.85 -2.2" rotation="-35 0 0">
+    <a-plane id="paper" render-order="3" bob="amp: 0.035; speed: 0.7; tilt: 1.2"
+             width="1.6" height="1.13"
+             material="shader: flat; src: #texDrawing; transparent: true; opacity: 1"></a-plane>
+    <a-plane id="frame" render-order="1"
+             width="2.58" height="1.98" position="0 0 -0.04" visible="false"
+             material="shader: flat; color: #ffffff; transparent: true; opacity: 0"></a-plane>
+    <a-plane id="magic" render-order="2"
+             width="2.4" height="1.8" position="0 0 -0.02" visible="false"
+             material="shader: flat; src: #texMagic; transparent: true; opacity: 0"></a-plane>
+    <a-entity id="title" render-order="20" position="0 1.28 0.06" visible="false"
+              canvas-text="value: С днём рождения, мамочка!; size: 64; color: #ffffff; maxWidth: 900; pxToM: 0.0016"></a-entity>
+    <a-entity id="sparkles" sparkles position="0 0 0.1"></a-entity>
+  </a-entity>
+
+  <a-entity id="hearts" hearts="count: 34" position="0 1 0"></a-entity>
+  <a-entity id="photos"></a-entity>
+
+  <a-entity id="rig" position="0 0 0">
+    <a-entity id="camera" camera="fov: 80; near: 0.05; far: 300" position="0 1.6 0"
+              look-controls="magicWindowTrackingEnabled: true; pointerLockEnabled: false; reverseMouseDrag: true">
+      <a-entity id="cursor"
+        cursor="fuse: true; fuseTimeout: 1100"
+        raycaster="objects: .gaze; far: 12"
+        position="0 0 -1"
+        geometry="primitive: ring; radiusInner: 0.012; radiusOuter: 0.018"
+        material="color: #ffffff; shader: flat; opacity: 0.85; transparent: true"
+        animation__fuse="property: scale; startEvents: fusing; from: 1 1 1; to: 2.4 2.4 1; dur: 1100"
+        animation__leave="property: scale; startEvents: mouseleave; to: 1 1 1; dur: 200"></a-entity>
+    </a-entity>
+  </a-entity>
+</a-scene>
+
+<!-- веб-интерфейс поверх сцены -->
+<div id="flash"></div>
+
+<div id="start" class="screen">
+  <div class="start-card">
+    <div class="balloons">🎈🎂🎈</div>
+    <h1 id="startTitle">С днём рождения,<br>мамочка!</h1>
+    <p class="sub">открытка от Глеба</p>
+    <button id="startBtn" class="big" disabled>Загружаю…</button>
+    <p class="tip">Лучше со звуком. Поворачивай телефон — открытка вокруг тебя.</p>
+  </div>
+</div>
+
+<div id="hud" hidden>
+  <div id="hint" class="hint"></div>
+  <div id="caption" class="caption"></div>
+  <div class="tools">
+    <button id="soundBtn" class="tool" title="Звук">🔊</button>
+    <button id="vrBtn" class="tool tool-text" title="Очки VR">VR</button>
+    <button id="centerBtn" class="tool" title="Повернуть открытку к себе">⌖</button>
+    <button id="replayBtn" class="tool" title="Сначала">↺</button>
+  </div>
+</div>
+
+<div id="stereoHud" hidden>
+  <button id="exitVr" class="tool">✕ выйти из VR</button>
+</div>
+
+<script src="js/scene.js"></script>
+</body>
+</html>
