@@ -1,0 +1,46 @@
+# Публикует открытку на GitHub Pages. Первый запуск заодно включает сам Pages
+# (для этого у configure-pages стоит enablement: true).
+name: Публикация открытки
+
+on:
+  push:
+    branches: [claude/gracious-sagan-wjxq7v]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Собрать сайт
+        run: |
+          mkdir -p _site
+          cp index.html _site/
+          cp -r css js vendor _site/
+          mkdir -p _site/assets
+          cp -r assets/images assets/audio _site/assets/
+          # исходники фото и аудио остаются в репозитории, но в сайт не едут
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
